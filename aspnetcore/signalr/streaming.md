@@ -146,7 +146,7 @@ To invoke a client to server streaming hub method from the .NET Client create a 
 
 Whenever data is written to the `ChannelWriter` the hub method on the server will receive a new item with the data from the client.
 
-To end the stream, complete the channel with `TryComplete()`.
+To end the stream, complete the channel with `channel.Writer.TryComplete()`.
 
 ```csharp
 var channel = Channel.CreateBounded<string>(10);
@@ -193,9 +193,9 @@ JavaScript clients call client to server streaming methods on hubs by passing in
 
 [!code-javascript[Upload javascript](streaming/sample.netcoreapp3.0/wwwroot/js/stream.js?range=74-84)]
 
-Calling `next(item)` with an item will write the item to the stream and the hub method will get the item on the server.
+Calling `subject.next(item)` with an item will write the item to the stream and the hub method will get the item on the server.
 
- To end the stream, call `complete()`.
+ To end the stream, call `subject.complete()`.
 
 ::: moniker-end
 
