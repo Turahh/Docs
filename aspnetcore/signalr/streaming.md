@@ -142,6 +142,12 @@ Console.WriteLine("Streaming completed");
 
 ### Client to server streaming
 
+To invoke a client to server streaming hub method from the .NET Client create a `Channel` and pass the `ChannelReader` as an argument to `SendAsync`, `InvokeAsync`, or `StreamAsChannelAsync`, depending on the hub method being invoked.
+
+Whenever data is written to the `ChannelWriter` the hub method on the server will receive a new item with the data from the client.
+
+To end the stream, complete the channel with `TryComplete()`.
+
 ```csharp
 var channel = Channel.CreateBounded<string>(10);
 await connection.SendAsync("UploadStream", channel.Reader);
@@ -183,7 +189,13 @@ To end the stream from the client, call the `dispose` method on the `ISubscripti
 
 ### Client to server streaming
 
-[!code-javascript[Upload javascript](streaming/sample.netcoreapp3.0/wwwroot/js/stream.js?range=74-85)]
+JavaScript clients call client to server streaming methods on hubs by passing in a `Subject` as one of the arguments in `send`, `invoke`, or `stream`, depending on the hub method being invoked. The `Subject` needs to be a class that looks like a `Subject`. For example, if you use RxJS then you can use the `Subject` class from that library.
+
+[!code-javascript[Upload javascript](streaming/sample.netcoreapp3.0/wwwroot/js/stream.js?range=74-84)]
+
+Calling `next(item)` with an item will write the item to the stream and the hub method will get the item on the server.
+
+ To end the stream, call `complete()`.
 
 ::: moniker-end
 
